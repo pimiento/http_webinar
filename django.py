@@ -3,7 +3,7 @@
 import socket
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 8880         # Port to listen on (non-privileged ports are > 1023)
+PORT = 9020         # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     try:
@@ -18,9 +18,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     break
                 try:
                     path = data.rstrip('\n').rstrip('\r')
+                    # GET /api/v1/ HTTP/1.1
+                    # Host: localhost
                     print(repr(path))
                     with open(path, 'r') as fd:
-                        conn.sendall((fd.read(100) + '\r\n').encode('utf-8'))
+                        conn.sendall((fd.read(1000) + '\r\n').encode('utf-8'))
                 except Exception as e:
                     conn.sendall(str(e + '\r\n').encode('utf-8'))
     except Exception as e:
